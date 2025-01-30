@@ -42,3 +42,30 @@ test('Create a franchise and delete a franchise', async() => {
     const deleteRes = await request(app).delete(`/api/franchise/${createRes.body.id}`)
     expect(deleteRes.body.message).toBe('franchise deleted');
 })
+
+test('create a store and delete a store', async() =>{
+    let admin  = await createAdminUser();
+    let adminRes = await request(app).put('/api/auth').send({
+        email: admin.email,
+        password: 'toomanysecrets' // Using the same password set in createAdminUser
+    });
+    let adminAuthToken = adminRes.body.token;
+})
+
+
+
+function expectValidJwt(potentialJwt) {
+    expect(potentialJwt).toMatch(/^[a-zA-Z0-9\-_]*\.[a-zA-Z0-9\-_]*\.[a-zA-Z0-9\-_]*$/);
+}
+async function createAdminUser() {
+    let user = { password: 'toomanysecrets', roles: [{ role: Role.Admin }] };
+    user.name = randomName();
+    user.email = user.name + '@admin.com';
+  
+    user = await DB.addUser(user);
+    return { ...user, password: 'toomanysecrets' };
+  }
+
+function randomName() {
+    return Math.random().toString(36).substring(2, 12);
+  }
