@@ -2,12 +2,11 @@ const request = require('supertest');
 const app = require('../service');
 const { register } = require('module');
 const { Role, DB } = require('../database/database.js');
+const franchiseRouter = require('./franchiseRouter.js');
 const testUser = {name:'pizza diner', email: 'reg@test.com', password: 'a'}
 let testUserAuthToken;
 let adminAuthToken;
 let registerRes;
-let franchiseid;
-let store;
 
 // Registers a random user every time the test run
 beforeAll(async () => {
@@ -35,13 +34,16 @@ test('Create a franchise and delete a franchise', async() => {
     });
     let adminAuthToken = adminRes.body.token;
     // create
-    const createRes = await request(app).get('/api/franchise').set('Authorization', `Bearer ${adminAuthToken}`).send('{"name": "pizzaPocket", "admins": [{"email": "f@jwt.com"}]}');
+    const franchise =  {name: "creedspizza", admins: [{email: admin.email}]}
+    const createRes = await request(app).post('/api/franchise').set('Authorization', `Bearer ${adminAuthToken}`).send(franchise);
     expect(createRes.status).toBe(200);
+
     //console.log("the body of the franchise created is:", createRes) // need to figure out how to get the id this is the bodybody: [ { id: 1, name: 'pizzaPocket', admins: [Array], stores: [Array] } ],
     // delete 
-    const deleteRes = await request(app).delete(`/api/franchise/${createRes.body.id}`)
+    const deleteRes = await request(app).delete(`/api/franchise/${createRes.body.id}`).set('Authorization', `Bearer ${adminAuthToken}`);
     expect(deleteRes.body.message).toBe('franchise deleted');
 })
+
 
 test('create a store and delete a store', async() =>{
     let admin  = await createAdminUser();
@@ -50,6 +52,19 @@ test('create a store and delete a store', async() =>{
         password: 'toomanysecrets' // Using the same password set in createAdminUser
     });
     let adminAuthToken = adminRes.body.token;
+    
+    const response = await request(app).get('/api/franchise');
+    let franchiseid = response.body[0].id; // the first franchise in the list
+    
+
+    let createStore = {franchiseId: franchiseid, name: "newstore" }
+    const storeRes = await request(app).post(`/api/franchise/${franchiseid}/store`).set('Authorization', `Bearer ${adminAuthToken}`).send(createStore);
+    expect(storeRes.status).toBe(200)
+
+    let storeid = storeRes.body.id
+    const deleteRes = request(app).delete(`/api/franchise/${franchiseid}/store/${storeid}`).set('Authorization', `Bearer ${adminAuthToken}`)
+    expect((await deleteRes).body.message).toBe('store deleted')
+
 })
 
 

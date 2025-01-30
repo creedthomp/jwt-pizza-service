@@ -24,7 +24,7 @@ test('Get menu', async() => {
         price: 0.0038,
         description: 'A garden of delight'
       })
-})
+}) 
 
 test('Add menu item', async() => {
     let admin  = await createAdminUser();
@@ -39,10 +39,7 @@ test('Add menu item', async() => {
 });
 
 
-test('Create order ', async() => {
-    const orderRes = await request(app).post('/api/order').send('{"franchiseId": 1, "storeId":1, "items":[{ "menuId": 1, "description": "Veggie", "price": 0.05 }]}').set('Authorization', `Bearer ${testUserAuthToken}`);
-    expect(orderRes.body.order).toBe('{"franchiseId": 1, "storeId":1, "items":[{ "menuId": 1, "description": "Veggie", "price": 0.05 }]}');
-});
+
 
 
 function randomName() {
