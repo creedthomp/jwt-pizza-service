@@ -26,7 +26,17 @@ test('Get menu', async() => {
       })
 })
 
-
+test('Add menu item', async() => {
+    let admin  = await createAdminUser();
+    let adminRes = await request(app).put('/api/auth').send({
+        email: admin.email,
+        password: 'toomanysecrets' // Using the same password set in createAdminUser
+    });
+    let adminAuthToken = adminRes.body.token;
+    const menuRes = await request(app).put('/api/order/menu').set('Authorization', `Bearer ${adminAuthToken}`).send({ title:"Student", description: "No topping, no sauce, just carbs", image:"pizza9.png", price: 0.0001 });
+    
+    expect(menuRes.body).toEqual(expect.arrayContaining([expect.objectContaining({title:"Student", description: "No topping, no sauce, just carbs", image:"pizza9.png", price: 0.0001})]));
+});
 
 
 test('Create order ', async() => {
