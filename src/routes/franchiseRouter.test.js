@@ -20,3 +20,9 @@ test('Get the franchises', async() => {
     const response = await request(app).get('/api/franchise');
     expect(response.status).toBe(200);
 });
+
+test('Get user franchises', async() => {
+    const response = await request(app).get(`/api/franchise/${registerRes.body.user.id}`).set('Authorization', `Bearer ${testUserAuthToken}`);
+    expect(response.status).toBe(200);
+    // write another expect
+});
