@@ -26,3 +26,19 @@ test('Get user franchises', async() => {
     expect(response.status).toBe(200);
     // write another expect
 });
+
+test('Create a franchise and delete a franchise', async() => {
+    let admin  = await createAdminUser();
+    let adminRes = await request(app).put('/api/auth').send({
+        email: admin.email,
+        password: 'toomanysecrets' // Using the same password set in createAdminUser
+    });
+    let adminAuthToken = adminRes.body.token;
+    // create
+    const createRes = await request(app).get('/api/franchise').set('Authorization', `Bearer ${adminAuthToken}`).send('{"name": "pizzaPocket", "admins": [{"email": "f@jwt.com"}]}');
+    expect(createRes.status).toBe(200);
+    //console.log("the body of the franchise created is:", createRes) // need to figure out how to get the id this is the bodybody: [ { id: 1, name: 'pizzaPocket', admins: [Array], stores: [Array] } ],
+    // delete 
+    const deleteRes = await request(app).delete(`/api/franchise/${createRes.body.id}`)
+    expect(deleteRes.body.message).toBe('franchise deleted');
+})
