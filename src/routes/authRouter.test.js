@@ -1,11 +1,9 @@
 const request = require('supertest');
 const app = require('../service');
-const { register } = require('module');
 const { Role, DB } = require('../database/database.js');
 
 const testUser = {name:'pizza diner', email: 'reg@test.com', password: 'a'}
 let testUserAuthToken;
-let adminAuthToken;
 let registerRes;
 
 // Registers a random user every time the test run
