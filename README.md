@@ -1,5 +1,6 @@
 # 🍕 jwt-pizza-service
-![Coverage Badge](https://raw.githubusercontent.com/creedthomp/jwt-pizza-service/main/coverageBadge.svg)
+![Coverage Badge](https://badge.cs329.click/badge/creedthomp/jwtpizzaservicecoverage)
+
 
 
 Backend service for making JWT pizzas. This service tracks users and franchises and orders pizzas. All order requests are passed to the JWT Pizza Factory where the pizzas are made.
