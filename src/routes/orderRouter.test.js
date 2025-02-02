@@ -16,7 +16,7 @@ beforeAll(async () => {
 
 test('Get menu', async() => {
     const menuRes = (await request(app).get('/api/order/menu'));
-    expect(menuRes.status).toBe(200)
+    expect(menuRes.status).toBe(200);
 }) 
 
 test('Add menu item', async() => {
