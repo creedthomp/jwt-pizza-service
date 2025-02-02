@@ -51,15 +51,15 @@ test('create a store and delete a store', async() =>{
     let adminAuthToken = adminRes.body.token;
     
     const response = await request(app).get('/api/franchise');
-    let franchiseid = response.body[0].id; // the first franchise in the list
+    //let franchiseid = response.body[0].id; // the first franchise in the list
     
 
-    let createStore = {franchiseId: franchiseid, name: "newstore" }
-    const storeRes = await request(app).post(`/api/franchise/${franchiseid}/store`).set('Authorization', `Bearer ${adminAuthToken}`).send(createStore);
+    let createStore = {franchiseId: response.body[0].id, name: "newstore" }
+    const storeRes = await request(app).post(`/api/franchise/${response.body[0].id}/store`).set('Authorization', `Bearer ${adminAuthToken}`).send(createStore);
     expect(storeRes.status).toBe(200)
 
     let storeid = storeRes.body.id
-    const deleteRes = request(app).delete(`/api/franchise/${franchiseid}/store/${storeid}`).set('Authorization', `Bearer ${adminAuthToken}`)
+    const deleteRes = request(app).delete(`/api/franchise/${response.body[0].id}/store/${storeid}`).set('Authorization', `Bearer ${adminAuthToken}`)
     expect((await deleteRes).body.message).toBe('store deleted')
 
 })
