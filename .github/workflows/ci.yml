@@ -71,23 +71,25 @@ jobs:
       - name: Tests
         run: npm test
 
-      - name: Update coverage
+      - name: Write config file
         run: |
-          # Extract coverage percentage from JSON
-          coverage=$(jq '.total.lines.pct' coverage/coverage-summary.json)
-          coverage_pct=$(printf "%.0f" $coverage) # Round to nearest whole number
-          
-          # Determine badge color based on threshold (80% cutoff)
-          color=$(echo "$coverage < 80" | bc -l | awk '{if ($1) print "red"; else print "green"}')
-          
-          # Generate badge using img.shields.io
-          curl -o coverageBadge.svg "https://img.shields.io/badge/Coverage-${coverage_pct}%25-${color}"
-          
-          # Configure Git to commit the badge
-          git config --local user.name "github-actions"
-          git config --local user.email "github-actions@github.com"
-          git add coverageBadge.svg
-          git commit -m "Updated coverage badge"
-          git push
+            echo "module.exports = {
+                jwtSecret: '${{ secrets.JWT_SECRET }}',
+                db: {
+                  connection: {
+                    host: '127.0.0.1',
+                    user: 'root',
+                    password: 'tempdbpassword',
+                    database: 'pizza',
+                    connectTimeout: 60000,
+                  },
+                  listPerPage: 10,
+                },
+                factory: {
+                  url: 'https://pizza-factory.cs329.click',
+                  apiKey: '${{ secrets.FACTORY_API_KEY }}',
+                },
+              };" > src/config.js
+
 
 
