@@ -31,7 +31,7 @@ test('Create a franchise and delete a franchise', async() => {
     });
     let adminAuthToken = adminRes.body.token;
     // create
-    const franchise =  {name: "creedspizza", admins: [{email: admin.email}]}
+    const franchise =  {name: "creedspizzaria", admins: [{email: admin.email}]}
     const createRes = await request(app).post('/api/franchise').set('Authorization', `Bearer ${adminAuthToken}`).send(franchise);
     expect(createRes.status).toBe(200);
 
@@ -49,7 +49,10 @@ test('create a store and delete a store', async() =>{
         password: 'toomanysecrets' // Using the same password set in createAdminUser
     });
     let adminAuthToken = adminRes.body.token;
-    
+
+    // craete a franchise
+    const franchise =  {name: "creedspizzaria", admins: [{email: admin.email}]}
+    const createRes = await request(app).post('/api/franchise').set('Authorization', `Bearer ${adminAuthToken}`).send(franchise);
     const response = await request(app).get('/api/franchise');
     //let franchiseid = response.body[0].id; // the first franchise in the list
     
@@ -61,6 +64,10 @@ test('create a store and delete a store', async() =>{
     let storeid = storeRes.body.id
     const deleteRes = request(app).delete(`/api/franchise/${response.body[0].id}/store/${storeid}`).set('Authorization', `Bearer ${adminAuthToken}`)
     expect((await deleteRes).body.message).toBe('store deleted')
+
+    // delete franchise
+    const deleted = await request(app).delete(`/api/franchise/${createRes.body.id}`).set('Authorization', `Bearer ${adminAuthToken}`);
+    expect(deleted.body.message).toBe('franchise deleted');
 
 })
 
