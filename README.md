@@ -1,7 +1,7 @@
 # 🍕 jwt-pizza-service
 
 
-![Coverage badge](https://badge.cs329.click/badge/creedthomp/jwtpizzaservice)
+![Coverage badge](https://badge.cs329.click/badge/creedthomp/jwtpizzaservicecoverage)
 
 
 
