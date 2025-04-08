@@ -239,6 +239,14 @@ class Metrics {
           console.log("Cleared active users set");
         }
 
+        //Add failed pizza requests metric
+        this.sendMetricToGrafana(
+          "pizza_failed_requests_total",
+          this.failedPizzaRequests,
+          "sum",
+          "1"
+        );
+
         this.sendMetricToGrafana(
           "pizza_purchases_total",
           this.pizzaPurchases,
